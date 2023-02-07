@@ -8,7 +8,19 @@ class General(commands.Cog):
 
     @discord.slash_command()
     async def info(self, ctx):
-        await ctx.send("")
+        embed = discord.Embed(
+        title = "DatBot 2.0",
+        description="A silly bot with great capabilities.",
+        color=discord.Colour.green(),
+    )
+        file = discord.File('./imgs/avatar.jpg', filename = 'avatar.jpg')
+        embed.set_thumbnail(url="attachment://avatar.jpg")
+        embed.set_footer(text="Written by HouseJoJo #4651")
+        embed.add_field(name = "History:",value = "First created on April 15, 2017", inline=False)
+        embed.add_field(name = "",value = "First ran on Jul 15, 2020 using Java", inline=False)
+        embed.add_field(name = "",value = "First developed using python on Feb 6th, 2023", inline=False)
+
+        await ctx.respond(file= file, embed=embed)
 
 def setup(bot):
     bot.add_cog(General(bot))
