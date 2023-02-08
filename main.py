@@ -5,7 +5,8 @@ import os
 load_dotenv()
 bot = discord.Bot()
 cogs_list = [
-    'general'
+    'general',
+    'gpt'
 ]
 for cog in cogs_list:
     bot.load_extension(f'cogs.{cog}')
@@ -17,7 +18,5 @@ async def on_ready():
 @bot.slash_command(name = "hello", description = "Test command, lets say hello.")
 async def hello(ctx):
     await ctx.respond("Hey!")
-
-    
 
 bot.run(os.getenv('TOKEN'))
