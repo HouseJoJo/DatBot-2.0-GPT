@@ -19,7 +19,7 @@ class GPT(commands.Cog):
             model="text-davinci-003",
             prompt=message,
             temperature = 0.3,
-            max_tokens = 150,
+            max_tokens = 200,
             top_p=1
         )
         print("OUTPUT="+response['choices'][0]['text'])
