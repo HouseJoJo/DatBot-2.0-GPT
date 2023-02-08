@@ -14,16 +14,15 @@ class GPT(commands.Cog):
     @discord.slash_command(description = "Ask the bot any prompt to be processed by GPT3.0")
     async def askgpt(self, ctx, *, message):
         await ctx.defer()
-        asyncio.sleep(1)
         response = openai.Completion.create(
             model="text-davinci-003",
-            prompt=message,
+            prompt=message + " summarize details to provide answer within a paragraph.",
             temperature = 0.3,
-            max_tokens = 200,
+            max_tokens = 250,
             top_p=1
         )
-        print("OUTPUT="+response['choices'][0]['text'])
-        await ctx.respond(response['choices'][0]['text'])
+        outMessage = f"**Prompt:** {message}\n**GPT:** {response['choices'][0]['text']}"
+        await ctx.respond(outMessage)
 
 def setup(bot):
     bot.add_cog(GPT(bot))
