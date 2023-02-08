@@ -58,6 +58,19 @@ class GPT(commands.Cog):
         outMessage = f"**Topic:** {topic} {response['choices'][0]['text']}"
         await ctx.respond(outMessage)
 
+    @commands.Cog.listener()
+    async def on_member_join(self, ctx, member): #REQUIRES INTENT: MEMBERS
+        await ctx.defer()
+        message = f"Write a witty or clever welcome message for Discord user {member.name}"
+        response = openai.Completion.create(
+            model = "text-davinci-003",
+            prompt = message,
+            temperature = 0.9,
+            max_tokens = 300,
+            top_p=1
+        )
+        await member.send(response['choices'][0]['text'])
+
 def setup(bot):
     bot.add_cog(GPT(bot))
 
