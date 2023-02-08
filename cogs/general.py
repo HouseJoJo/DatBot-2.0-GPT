@@ -6,7 +6,7 @@ class General(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @discord.slash_command()
+    @discord.slash_command(description = "Provides information of bot, history, and creator")
     async def info(self, ctx):
         embed = discord.Embed(
         title = "DatBot 2.0",
@@ -21,6 +21,11 @@ class General(commands.Cog):
         embed.add_field(name = "",value = "First developed using python on Feb 6th, 2023", inline=False)
 
         await ctx.respond(file= file, embed=embed)
+
+    @discord.slash_command(description = "Find bot latency. Might play ping pong with you if you're lucky.")
+    async def ping(self, ctx):
+        latency = round(self.bot.latency, 3)
+        await ctx.respond(f"Pong. Latency is {latency} seconds.")
 
 def setup(bot):
     bot.add_cog(General(bot))
