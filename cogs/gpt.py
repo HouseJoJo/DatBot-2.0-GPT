@@ -1,8 +1,9 @@
 import discord
 from discord.ext import commands
+from discord.commands import Option
 import os
 import openai
-import asyncio
+import random
 
 openai.api_key = os.getenv("OPENAI_KEY")
 
@@ -35,6 +36,26 @@ class GPT(commands.Cog):
             top_p=1
         )
         outMessage = f"**Prompt:** {message} {response['choices'][0]['text']}"
+        await ctx.respond(outMessage)
+
+    @discord.slash_command(description = "Have GPT-3 explain a topic/random topic to you 'in simple terms'")
+    async def gptexplain(self, ctx, topic: Option(str, "Enter a topic", required = False, default = '')):
+        if (topic == ''):
+            topics = ['Numerical Analysis', 'Calculus', 'Linear Algebra', 'Physics 1', 'Physics 2', 'Python', 'Internet of Things',
+                      'Data Science', 'Artificial Intelligence', 'Astrology', 'Neuroscience', 'Meteorology']
+            topic = random.choice(topics)
+            message = f"Explain one fun fact about a college level {topic} course content like I'm five."
+        else:
+            message = f"Explain {topic} to me like I'm five, simplify any unnecessary details."
+        await ctx.defer()
+        response = openai.Completion.create(
+            model = "text-davinci-003",
+            prompt=message,
+            temperature = 0.5,
+            max_tokens = 325,
+            top_p=1
+        )
+        outMessage = f"**Topic:** {topic} {response['choices'][0]['text']}"
         await ctx.respond(outMessage)
 
 def setup(bot):
