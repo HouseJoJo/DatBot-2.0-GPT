@@ -24,6 +24,19 @@ class GPT(commands.Cog):
         outMessage = f"**Prompt:** {message} {response['choices'][0]['text']}"
         await ctx.respond(outMessage)
 
+    @discord.slash_command(description = "Provide a prompt that will be asked to a 'creative' version of GPT-3")
+    async def askcreativegpt(self, ctx, *, message):
+        await ctx.defer()
+        response = openai.Completion.create(
+            model = "text-davinci-003",
+            prompt="Be creative, " + message,
+            temperature = 0.9,
+            max_tokens = 400,
+            top_p=1
+        )
+        outMessage = f"**Prompt:** {message} {response['choices'][0]['text']}"
+        await ctx.respond(outMessage)
+
 def setup(bot):
     bot.add_cog(GPT(bot))
 
