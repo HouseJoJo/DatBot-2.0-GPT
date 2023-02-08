@@ -21,7 +21,7 @@ class GPT(commands.Cog):
             max_tokens = 250,
             top_p=1
         )
-        outMessage = f"**Prompt:** {message}\n**GPT:** {response['choices'][0]['text']}"
+        outMessage = f"**Prompt:** {message} {response['choices'][0]['text']}"
         await ctx.respond(outMessage)
 
 def setup(bot):
