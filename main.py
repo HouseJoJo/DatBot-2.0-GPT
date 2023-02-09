@@ -2,6 +2,10 @@ import discord
 from dotenv import load_dotenv
 import os
 
+intents = discord.Intents.default()
+intents.typing = False
+intents.presences = False
+
 load_dotenv()
 bot = discord.Bot()
 cogs_list = [

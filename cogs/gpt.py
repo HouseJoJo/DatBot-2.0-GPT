@@ -6,6 +6,7 @@ import openai
 import random
 
 openai.api_key = os.getenv("OPENAI_KEY")
+ERROR_MESSAGE = "OpenAI was unable to handle this request, Sorry!"
 
 class GPT(commands.Cog):
 
@@ -15,27 +16,33 @@ class GPT(commands.Cog):
     @discord.slash_command(description = "Ask the bot any prompt to be processed by GPT3.0")
     async def askgpt(self, ctx, *, message):
         await ctx.defer()
-        response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=message + " summarize details to provide answer within a paragraph.",
-            temperature = 0.3,
-            max_tokens = 250,
-            top_p=1
-        )
-        outMessage = f"**Prompt:** {message} {response['choices'][0]['text']}"
+        try:
+            response = openai.Completion.create(
+                model="text-davinci-003",
+                prompt=message + " summarize details to provide answer within a paragraph.",
+                temperature = 0.3,
+                max_tokens = 250,
+                top_p=1
+            )
+            outMessage = f"**Prompt:** {message} {response['choices'][0]['text']}"
+        except openai.error.RateLimitError:
+            outMessage = ERROR_MESSAGE
         await ctx.respond(outMessage)
 
     @discord.slash_command(description = "Provide a prompt that will be asked to a 'creative' version of GPT-3")
     async def askcreativegpt(self, ctx, *, message):
         await ctx.defer()
-        response = openai.Completion.create(
-            model = "text-davinci-003",
-            prompt="Be creative, " + message,
-            temperature = 0.9,
-            max_tokens = 400,
-            top_p=1
-        )
-        outMessage = f"**Prompt:** {message} {response['choices'][0]['text']}"
+        try:
+            response = openai.Completion.create(
+                model = "text-davinci-003",
+                prompt="Be creative, " + message,
+                temperature = 0.9,
+                max_tokens = 400,
+                top_p=1
+            )
+            outMessage = f"**Prompt:** {message} {response['choices'][0]['text']}"
+        except openai.error.RateLimitError:
+            outMessage = ERROR_MESSAGE
         await ctx.respond(outMessage)
 
     @discord.slash_command(description = "Have GPT-3 explain a topic/random topic to you 'in simple terms'")
@@ -48,18 +55,22 @@ class GPT(commands.Cog):
         else:
             message = f"Explain {topic} to me like I'm five, simplify any unnecessary details."
         await ctx.defer()
-        response = openai.Completion.create(
-            model = "text-davinci-003",
-            prompt=message,
-            temperature = 0.5,
-            max_tokens = 325,
-            top_p=1
-        )
-        outMessage = f"**Topic:** {topic} {response['choices'][0]['text']}"
+        try:
+            response = openai.Completion.create(
+                model = "text-davinci-003",
+                prompt=message,
+                temperature = 0.5,
+                max_tokens = 325,
+                top_p=1
+            )
+            outMessage = f"**Topic:** {topic} {response['choices'][0]['text']}"
+        except openai.error.RateLimitError:
+            outMessage = ERROR_MESSAGE
         await ctx.respond(outMessage)
 
     @commands.Cog.listener()
     async def on_member_join(self, ctx, member): #REQUIRES INTENT: MEMBERS
+        print("member join")
         await ctx.defer()
         message = f"Write a witty or clever welcome message for Discord user {member.name}"
         response = openai.Completion.create(
